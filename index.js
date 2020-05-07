@@ -35,6 +35,7 @@ const typeDefs = gql`
   }
 
   type Mutation {
+    removeMovie(id: ID!): Movie
     addMovie(title: String!, year: Int): Movie
   }
 `
@@ -51,7 +52,7 @@ const resolvers = {
     }
   },
   Mutation: {
-    addMovie: async (_, { title, year}) => {
+    addMovie: async (_, { title, year }) => {
       const movie = await Movie.create({
         id: `movies/${uuidV4()}`,
         title,
@@ -59,6 +60,13 @@ const resolvers = {
       })
 
       return movie.get({plain: true});
+    },
+    removeMovie: async (_, { id }) => {
+      const movie = await Movie.findByPk(id)
+
+      movie.destroy();
+
+      return movie.get({ plain: true});
     }
   }
 }
