@@ -21,20 +21,6 @@ const Movie = sequelize.define("movies", {
 
 sequelize.sync();
 
-
-const Movies = [
-  {
-    id: "movie/1",
-    title: "Full Metal Jacket",
-    year: 1987
-  },
-  {
-    id: "movie/2",
-    title: "The Matrix",
-    year: 1999
-  }
-]
-
 const typeDefs = gql`
   type Movie {
     id: ID!
@@ -51,10 +37,11 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     allMovies: () => {
-      return Movies;
+      const movies = Movie.findAll();
+      return movies;
     },
     movie: (_, { id } ) => {
-      const movie = Movies.find(movie => movie.id === id);
+      const movie = Movie.findByPk(id);
       return movie;
     }
   }
