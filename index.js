@@ -21,12 +21,16 @@ const typeDefs = gql`
   }
 
   type Query {
+    allMovies: [Movie]
     movie(id: ID): Movie
   }
 `
 
 const resolvers = {
   Query: {
+    allMovies: () => {
+      return Movies;
+    },
     movie: (_, { id } ) => {
       const movie = Movies.find(movie => movie.id === id);
       return movie;
