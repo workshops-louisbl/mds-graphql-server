@@ -16,9 +16,12 @@ const Movie = sequelize.define("movies", {
   year: {
     type: Sequelize.INTEGER
   },
+  pitch: {
+    type: Sequelize.TEXT
+  }
 })
 
-sequelize.sync();
+sequelize.sync({ force: true });
 
 module.exports = {
   Movie

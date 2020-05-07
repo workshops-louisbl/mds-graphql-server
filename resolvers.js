@@ -13,19 +13,25 @@ const resolvers = {
       const title = movie.get("title");
       const imdbData = await ctx.omdb.fetchOmdbData(title);
       const rating = imdbData.imdbRating;
+      const poster = imdbData.Poster;
 
       return {
         ...movie.get({ plain: true}),
-        rating
+        rating,
+        poster
       };
     }
   },
   Mutation: {
     addMovie: async (_, { title, year }, ctx) => {
+      const imdbData = await ctx.omdb.fetchOmdbData(title);
+      const pitch = imdbData.Plot;
+
       const movie = await ctx.db.Movie.create({
         id: `movies/${uuidV4()}`,
         title,
-        year
+        year,
+        pitch
       })
 
       return movie.get({plain: true});

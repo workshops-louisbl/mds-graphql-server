@@ -6,6 +6,8 @@ const typeDefs = gql`
     title: String!
     year: Int
     rating: String
+    poster: String
+    pitch: String
   }
 
   type Query {
