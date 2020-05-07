@@ -2,6 +2,15 @@ const { v4: uuidV4 } = require("uuid");
 
 
 const resolvers = {
+  Movie: {
+    imdbData: async (parent, args, ctx) => {
+      const movie = parent;
+      const title = movie.get("title");
+      const imdbData = await ctx.omdb.fetchOmdbData(title);
+
+      return imdbData;
+    }
+  },
   Query: {
     allMovies: (_, __, ctx) => {
       const movies = ctx.db.Movie.findAll();
@@ -9,17 +18,7 @@ const resolvers = {
     },
     movie: async (_, { id }, ctx ) => {
       const movie = await ctx.db.Movie.findByPk(id);
-
-      const title = movie.get("title");
-      const imdbData = await ctx.omdb.fetchOmdbData(title);
-      const rating = imdbData.imdbRating;
-      const poster = imdbData.Poster;
-
-      return {
-        ...movie.get({ plain: true}),
-        rating,
-        poster
-      };
+      return movie;
     }
   },
   Mutation: {

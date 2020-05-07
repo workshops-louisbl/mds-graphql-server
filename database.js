@@ -21,7 +21,7 @@ const Movie = sequelize.define("movies", {
   }
 })
 
-sequelize.sync({ force: true });
+sequelize.sync();
 
 module.exports = {
   Movie

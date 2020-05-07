@@ -5,9 +5,15 @@ const typeDefs = gql`
     id: ID!
     title: String!
     year: Int
-    rating: String
-    poster: String
     pitch: String
+    imdbData: Imdb
+  }
+
+  type Imdb {
+    imdbRating: String
+    Poster: String
+    Director: String
+    Genre: String
   }
 
   type Query {
