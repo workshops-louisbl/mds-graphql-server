@@ -1,4 +1,6 @@
+require('dotenv').config();
 const { v4: uuidV4 } = require("uuid");
+const axios = require("axios");
 const Sequelize = require("sequelize");
 const { ApolloServer, gql } = require("apollo-server");
 
@@ -27,6 +29,7 @@ const typeDefs = gql`
     id: ID!
     title: String!
     year: Int
+    rating: String
   }
 
   type Query {
@@ -46,9 +49,19 @@ const resolvers = {
       const movies = Movie.findAll();
       return movies;
     },
-    movie: (_, { id } ) => {
-      const movie = Movie.findByPk(id);
-      return movie;
+    movie: async (_, { id } ) => {
+      const movie = await Movie.findByPk(id);
+
+      const title = movie.get("title");
+      const url = `https://www.omdbapi.com/?t=${title}&apikey=${process.env.OMDB_API_KEY}`;
+      const imdbData = await axios(url);
+      // console.log("imdbData: ", imdbData.data);
+      const rating = imdbData.data.imdbRating;
+
+      return {
+        ...movie.get({ plain: true}),
+        rating
+      };
     }
   },
   Mutation: {
