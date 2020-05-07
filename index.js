@@ -1,3 +1,4 @@
+const { v4: uuidV4 } = require("uuid");
 const Sequelize = require("sequelize");
 const { ApolloServer, gql } = require("apollo-server");
 
@@ -32,6 +33,10 @@ const typeDefs = gql`
     allMovies: [Movie]
     movie(id: ID): Movie
   }
+
+  type Mutation {
+    addMovie(title: String!, year: Int): Movie
+  }
 `
 
 const resolvers = {
@@ -43,6 +48,17 @@ const resolvers = {
     movie: (_, { id } ) => {
       const movie = Movie.findByPk(id);
       return movie;
+    }
+  },
+  Mutation: {
+    addMovie: async (_, { title, year}) => {
+      const movie = await Movie.create({
+        id: `movies/${uuidV4()}`,
+        title,
+        year
+      })
+
+      return movie.get({plain: true});
     }
   }
 }
